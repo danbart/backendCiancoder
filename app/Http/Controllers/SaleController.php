@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class SaleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class ProductController extends Controller
     public function index()
     {
         //
-        return Product::all();
+        return Sale::all();
     }
 
     /**
@@ -38,7 +38,7 @@ class ProductController extends Controller
     public function show($id)
     {
         //
-        return Product::find($id);
+        return Sale::find($id);
     }
 
     /**
