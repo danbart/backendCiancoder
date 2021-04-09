@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -41,3 +42,8 @@ Route::get('/category/{id}', [CategoryController::class, 'show'])->where('id', '
 // product route
 Route::get('/product', [ProductController::class, 'index']);
 Route::get('/product/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
+
+
+// sale route
+Route::get('/sale', [SaleController::class, 'index']);
+Route::get('/sale/{id}', [SaleController::class, 'show'])->where('id', '[0-9]+');
