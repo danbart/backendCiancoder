@@ -25,7 +25,7 @@ class User extends Authenticatable
         'addres',
         'document',
         'avatar',
-        ''
+        'activeW'
     ];
 
     /**
@@ -46,4 +46,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'id_role');
+    }
+
+    public function seller()
+    {
+        return $this->hasMany(Sale::class);
+    }
+
+    public function buyer()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }
