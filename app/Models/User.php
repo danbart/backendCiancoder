@@ -27,7 +27,8 @@ class User extends Authenticatable implements JWTSubject
         'addres',
         'document',
         'avatar',
-        'activeW'
+        'activeW',
+        'id_role'
     ];
 
     /**
@@ -82,5 +83,12 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function hasRole($role)
+    {
+        $user = auth()->user();
+        $myrole = Role::find($user->id_role);
+        return $myrole->role === $role;
     }
 }

@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Auth\Events\Validated;
-use Illuminate\Contracts\Validation\Validator;
+use Validator;
 
 class AuthController extends Controller
 {
+
+    protected $roleuser = 'USER';
+
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
@@ -43,18 +46,23 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nick_name' => 'required|string|between:5,20',
+            'nick_name' => 'required|string|between:5,20|unique:users',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
         ]);
 
+        $role = DB::table('role')->select('id')->where('role', [$this->roleuser])->first();
+
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json($validator->errors(), 400);
         }
 
         $user = User::create(array_merge(
             $validator->validated(),
-            ['password' => bcrypt($request->password)]
+            [
+                'password' => bcrypt($request->password),
+                'id_role' => $role->id
+            ]
         ));
 
         return response()->json([

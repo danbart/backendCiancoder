@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Validator;
 
 class CategoryController extends Controller
 {
@@ -27,6 +28,19 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
+        $category = new Category();
+        $validator = Validator::make($request->all(), [
+            'category' => 'required|string|unique:category|min:4',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $category->category = $request->input('category');
+        $response = $category->save();
+
+        return response()->json(['response' => $response], 201);
     }
 
     /**
@@ -38,7 +52,11 @@ class CategoryController extends Controller
     public function show($id)
     {
         //
-        return Category::find($id);
+        $category = Category::find($id);
+        if (!isset($category)) {
+            return response()->json(['error' => 'No Exist'], 404);
+        }
+        return response()->json($category, 200);
     }
 
     /**
@@ -51,6 +69,24 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $category = Category::find($id);
+
+        if (!isset($category)) {
+            return response()->json(['error' => 'No Exist'], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'category' => 'required|string|unique:category|min:4',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $category->category = $request->input('category');
+        $response = $category->update();
+
+        return response()->json(['response' => $response], 201);
     }
 
     /**
