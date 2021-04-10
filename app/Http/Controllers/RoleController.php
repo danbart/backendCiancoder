@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Validator;
 
 class RoleController extends Controller
 {
@@ -28,13 +29,18 @@ class RoleController extends Controller
     {
         //
         $role = new Role();
-        $validateData = $this->validate($request, [
-            'role' => 'required|min:4'
+        $validator = Validator::make($request->all(), [
+            'role' => 'required|string|unique:role|min:4'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
         $role->role = $request->input('role');
         $response = $role->save();
 
-        return response()->json($response, 201);
+        return response()->json(['response' => $response], 201);
     }
 
     /**
@@ -46,7 +52,11 @@ class RoleController extends Controller
     public function show($id)
     {
         //
-        return Role::find($id);
+        $role = Role::find($id);
+        if (isset($role)) {
+            return response()->json($role, 200);
+        }
+        return response()->json(['error' => 'No Exist'], 404);
     }
 
     /**
@@ -60,10 +70,21 @@ class RoleController extends Controller
     {
         //
         $role = Role::find($id);
+        if (!isset($role)) {
+            return response()->json(['error' => 'No Exist'], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'role' => 'required|string|unique:role|min:4'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
         $role->role = $request->input('role');
         $response = $role->update();
 
-        return response()->json($response, 200);
+        return response()->json(['response' => $response], 200);
     }
 
     /**
