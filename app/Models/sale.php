@@ -11,14 +11,13 @@ class Sale extends Model
 
     protected $table = 'sale';
 
+    protected $fillable = [
+        'id_user'
+    ];
+
     public function seller()
     {
-        return $this->belongsTo(User::class, 'id_seller');
-    }
-
-    public function buyer()
-    {
-        return $this->belongsTo(User::class, 'id_buyer');
+        return $this->belongsTo(User::class, 'id_user');
     }
 
     public function sale_detail()

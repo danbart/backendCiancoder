@@ -57,9 +57,18 @@ Route::middleware('auth')->put('/category/{id}', [CategoryController::class, 'up
 Route::get('/product', [ProductController::class, 'index']);
 Route::middleware('auth')->post('/product', [ProductController::class, 'store']);
 Route::get('/product/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
+Route::middleware('auth')->get('/product/sale', [ProductController::class, 'getTotalSale'])->where('id', '[0-9]+');
+Route::middleware('auth')->get('/product/{id}/sale', [ProductController::class, 'getTotalSaleProduct'])->where('id', '[0-9]+');
 Route::middleware('auth')->put('/product/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
 
 
 // sale route
 Route::middleware('auth')->get('/sale', [SaleController::class, 'index']);
+Route::middleware('auth')->post('/sale', [SaleController::class, 'store']);
 Route::middleware('auth')->get('/sale/{id}', [SaleController::class, 'show'])->where('id', '[0-9]+');
+Route::middleware('auth')->put('/sale/{id}', [SaleController::class, 'putEndSale'])->where('id', '[0-9]+');
+
+// sale detail route
+Route::middleware('auth')->get('/sale/{id}/detail', [SaleController::class, 'getSaleDetail'])->where('id', '[0-9]+');
+Route::middleware('auth')->post('/sale/{id}/detail', [SaleController::class, 'postSaleDetail'])->where('id', '[0-9]+');
+Route::middleware('auth')->put('/sale/{idSale}/detail/{idDetail}', [SaleController::class, 'putCancelDetail'])->where('id', '[0-9]+');

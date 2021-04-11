@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Sale_detail;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -70,7 +71,7 @@ class ProductController extends Controller
         //
         $product = Product::find($id);
         if (!isset($product)) {
-            return response()->json(['error' => 'No Exist'], 404);
+            return response()->json(['error' => 'Product does not exist'], 404);
         }
         return response()->json($product, 200);
     }
@@ -93,7 +94,7 @@ class ProductController extends Controller
         }
 
         if ($user->id !== $product->id_user) {
-            return response()->json(['error' => 'User unauthorized'], 404);
+            return response()->json(['error' => 'User unauthorized'], 400);
         }
 
         $validator = Validator::make($request->all(), [
@@ -132,5 +133,83 @@ class ProductController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getTotalSaleProduct($id)
+    {
+
+        $user = auth()->user();
+        $product = Product::find($id);
+        $details = Sale_detail::where('id_product', $product->id)->get();
+
+        if (!isset($product)) {
+            return response()->json(['error' => 'Product does not exist'], 404);
+        }
+
+        if ($user->id !== $product->id_user) {
+            return response()->json(['error' => 'User unauthorized'], 400);
+        }
+
+        if (!isset($details)) {
+            return response()->json(['error' => 'Product without sales'], 400);
+        }
+
+        $sold = 0;
+        $cancel = 0;
+        $profit = 0;
+
+        foreach ($details as $detail) {
+
+            if (!empty($detail->cancel_detail)) {
+                $cancel += 1;
+            } else {
+                $sold  += 1;
+                $profit += $detail->total_price;
+            }
+        }
+
+
+        return response()->json([
+            'Sold' => $sold,
+            'Cancel' => $cancel,
+            'Profit' => $profit,
+            'response' => $detail
+        ], 201);
+    }
+
+    public function getTotalSale()
+    {
+
+        $user = auth()->user();
+        $products = Product::where('id_user', $user->id)->get();
+
+        if (!isset($products)) {
+            return response()->json(['error' => 'No Products'], 404);
+        }
+
+        $sold = 0;
+        $cancel = 0;
+        $profit = 0;
+
+        foreach ($products as $product) {
+
+            $details = Sale_detail::where('id_product', $product->id)->get();
+            foreach ($details as $detail) {
+
+                if (!empty($detail->cancel_detail)) {
+                    $cancel += 1;
+                } else {
+                    $sold  += 1;
+                    $profit += $detail->total_price;
+                }
+            }
+        }
+
+
+        return response()->json([
+            'Sold' => $sold,
+            'Cancel' => $cancel,
+            'Profit' => $profit,
+        ], 201);
     }
 }
