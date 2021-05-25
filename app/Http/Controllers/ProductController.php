@@ -73,7 +73,7 @@ class ProductController extends Controller
         if (!isset($product)) {
             return response()->json(['error' => 'Product does not exist'], 404);
         }
-        return response()->json($product, 200);
+        return response()->json([$product], 200);
     }
 
     /**
