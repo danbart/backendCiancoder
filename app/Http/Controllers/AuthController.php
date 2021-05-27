@@ -41,6 +41,35 @@ class AuthController extends Controller
     }
 
     /**
+     * Update user Info
+     */
+
+    public function update(Request $request)
+    {
+        //
+        $user = User::find(auth()->user()->id);
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'string|min:4',
+            'last_name' => 'string|min:4',
+            'document' => 'numeric',
+            'addres' => 'string|between:10,200',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        if (!empty($request->input('name'))) $user->name = $request->input('name');
+        if (!empty($request->input('last_name'))) $user->last_name = $request->input('last_name');
+        if (!empty($request->input('document'))) $user->document = $request->input('document');
+        if (!empty($request->input('addres'))) $user->addres = $request->input('addres');
+        $response = $user->update();
+
+        return response()->json(['response' => $response], 201);
+    }
+
+    /**
      * Register User
      */
     public function register(Request $request)
