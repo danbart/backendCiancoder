@@ -173,7 +173,7 @@ class ProductController extends Controller
             'Sold' => $sold,
             'Cancel' => $cancel,
             'Profit' => $profit,
-            'response' => $detail
+            'response' => $details
         ], 201);
     }
 
