@@ -140,7 +140,6 @@ class ProductController extends Controller
 
         $user = auth()->user();
         $product = Product::find($id);
-        $details = Sale_detail::where('id_product', $product->id)->get();
 
         if (!isset($product)) {
             return response()->json(['error' => 'Product does not exist'], 404);
@@ -149,6 +148,8 @@ class ProductController extends Controller
         if ($user->id !== $product->id_user) {
             return response()->json(['error' => 'User unauthorized'], 400);
         }
+
+        $details = Sale_detail::where('id_product', $product->id)->get();
 
         if (!isset($details)) {
             return response()->json(['error' => 'Product without sales'], 400);
