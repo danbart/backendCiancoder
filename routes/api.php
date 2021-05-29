@@ -37,8 +37,8 @@ Route::group([
 });
 
 // users routers
-Route::get('/user', [UserController::class, 'index']);
-Route::get('/user/{id}', [UserController::class, 'show'])->where('id', '[0-9]+');
+// Route::get('/user', [UserController::class, 'index']);
+// Route::get('/user/{id}', [UserController::class, 'show'])->where('id', '[0-9]+');
 
 
 // role ruote
