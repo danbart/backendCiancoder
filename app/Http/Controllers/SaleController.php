@@ -39,8 +39,7 @@ class SaleController extends Controller
 
         if (isset($sale)) {
             return response()->json([
-                'message' => 'Sale successfully registered',
-                'sele' => $sale
+                $sale
             ], 201);
         }
 
@@ -50,8 +49,7 @@ class SaleController extends Controller
         ));
 
         return response()->json([
-            'message' => 'Sale successfully registered',
-            'sele' => $sale
+            $sale
         ], 201);
     }
 
