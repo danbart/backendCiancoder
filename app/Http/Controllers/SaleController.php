@@ -34,6 +34,17 @@ class SaleController extends Controller
     {
         //
         $user = auth()->user();
+
+        $sale = Sale::where('id_user', $user->id)->whereNull('end_sale')->first();
+
+        if (isset($sale)) {
+            return response()->json([
+                'message' => 'Sale successfully registered',
+                'sele' => $sale
+            ], 201);
+        }
+
+
         $sale = Sale::create(array_merge(
             ['id_user' => $user->id]
         ));
